@@ -92,43 +92,7 @@ export default function StatistikPage() {
                   head_cell: "text-black font-bold",
                   caption_label: "text-black font-bold uppercase",
                 }}
-                captionLayout="dropdown"
-                fromYear={2000}
-                toYear={2030}
                 locale={id}
-                components={{
-                  Dropdown: ({ value, onChange, children, ...props }: any) => {
-                    const options = React.Children.toArray(children) as React.ReactElement<React.OptionHTMLAttributes<HTMLOptionElement>>[];
-                    const selected = options.find((child) => child.props.value === value);
-                    const handleChange = (value: string) => {
-                      const changeEvent = {
-                        target: { value },
-                      } as React.ChangeEvent<HTMLSelectElement>;
-                      onChange?.(changeEvent);
-                    };
-                    return (
-                      <Select
-                        value={value?.toString()}
-                        onValueChange={(value) => {
-                          handleChange(value);
-                        }}
-                      >
-                        <SelectTrigger className="pr-1.5 focus:ring-0 h-8 w-fit gap-1 rounded border-2 border-black bg-white px-2 py-1 text-sm font-bold focus:bg-primary/10 hover:bg-primary/10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                          <SelectValue>{selected?.props?.children}</SelectValue>
-                        </SelectTrigger>
-                        <SelectContent position="popper" className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg">
-                          <div className="max-h-[var(--radix-select-content-available-height)] overflow-y-auto">
-                            {options.map((option, id) => (
-                              <SelectItem key={`${option.props.value}-${id}`} value={option.props.value?.toString() ?? ""}>
-                                {option.props.children}
-                              </SelectItem>
-                            ))}
-                          </div>
-                        </SelectContent>
-                      </Select>
-                    );
-                  },
-                }}
               />
             </PopoverContent>
           </Popover>

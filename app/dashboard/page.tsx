@@ -31,7 +31,7 @@ export default function DashboardPage() {
     {
       title: "Link",
       icon: Link,
-      href: "#",
+      href: "/dashboard/link",
       variant: "default" as const,
     },
     {
