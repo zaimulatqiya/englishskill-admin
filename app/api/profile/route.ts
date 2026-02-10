@@ -44,7 +44,6 @@ export async function GET(request: NextRequest) {
     } else {
       // Build query with optional filters
       let query = supabase.from("profile").select("*");
-
       // Apply filters if provided
       if (tahun) {
         query = query.eq("tahun", tahun);
@@ -56,7 +55,9 @@ export async function GET(request: NextRequest) {
 
         // Try to filter - use OR to support both formats
         // This will work whether database stores "1", "01", or "Januari"
+        // month must 01, 02, 03, ...
         query = query.or(`bulan.eq.${monthNumber},bulan.eq.${monthNumber.padStart(2, "0")},bulan.eq.${bulan}`);
+        // query = query.eq("bulan", monthNumber);
       }
 
       // Order by created_at ascending
@@ -64,6 +65,8 @@ export async function GET(request: NextRequest) {
 
       const { data, error } = await query;
 
+      // total data
+      console.log("count data", data?.length);
       if (error) {
         return NextResponse.json({ error: "Failed to fetch profiles", details: error.message }, { status: 500 });
       }

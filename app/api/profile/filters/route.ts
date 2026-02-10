@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
     const uniqueYears = [...new Set(data?.map((p) => p.tahun).filter(Boolean))].sort();
     const uniqueMonths = [...new Set(data?.map((p) => p.bulan).filter(Boolean))];
 
+    console.log("count data", data.length);
     return NextResponse.json(
       {
         data: {
