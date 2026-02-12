@@ -137,6 +137,8 @@ export async function POST(request: NextRequest) {
           total_score4: body.total_score4 || null,
           tanggal_selesai_ujian: body.tanggal_selesai_ujian || null,
           kategori_soal: body.kategori_soal || null,
+          tanggal_cetak_sertifikat: body.tanggal_cetak_sertifikat || null,
+          expired_date: body.expired_date || null,
         },
       ])
       .select();

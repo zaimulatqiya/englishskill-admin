@@ -91,7 +91,7 @@ export async function updateProfile(payload: UpdateProfilePayload): Promise<Prof
     const result: ApiResponse<Profile[]> = await response.json();
 
     if (!response.ok) {
-      throw new Error(result.error || "Failed to update profile");
+      throw new Error(result.details || result.error || "Failed to update profile");
     }
 
     if (!result.data || result.data.length === 0) {

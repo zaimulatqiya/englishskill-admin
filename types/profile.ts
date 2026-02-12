@@ -43,6 +43,8 @@ export interface Profile {
   total_score4?: number | null; // float4
   tanggal_selesai_ujian: string | null; // date
   kategori_soal: number | null; // int2
+  tanggal_cetak_sertifikat?: string | null; // date
+  expired_date?: string | null; // date
 }
 
 // Profile creation payload (without auto-generated fields)
@@ -88,6 +90,8 @@ export interface CreateProfilePayload {
   total_score4?: number | null;
   tanggal_selesai_ujian?: string | null;
   kategori_soal?: number | null;
+  tanggal_cetak_sertifikat?: string | null;
+  expired_date?: string | null;
 }
 
 // Profile update payload (all fields optional except id)
