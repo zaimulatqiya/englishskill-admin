@@ -36,27 +36,33 @@ export default function UsersPage() {
 
   const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = React.useState("");
+
+  // Debounce search query
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   // Fetch profiles on mount and when filters change
   React.useEffect(() => {
     loadProfiles();
-  }, [selectedYear, selectedMonth]);
-
-  // Apply search filter when search query changes
-  React.useEffect(() => {
-    applySearchFilter();
-  }, [searchQuery, profiles]);
+  }, [selectedYear, selectedMonth, debouncedSearchQuery]);
 
   // Reset to first page when filters change
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [selectedYear, selectedMonth, searchQuery]);
+  }, [selectedYear, selectedMonth, debouncedSearchQuery]);
 
   const loadProfiles = async () => {
     setLoading(true);
     setError(null);
     try {
-      // Use API filter for year and month
-      const data = await filterProfilesByDate(selectedYear || undefined, selectedMonth || undefined);
+      // Use API filter for year, month, and search query
+      const data = await filterProfilesByDate(selectedYear || undefined, selectedMonth || undefined, debouncedSearchQuery || undefined);
       setProfiles(data);
       setFilteredProfiles(data);
     } catch (err) {
@@ -66,20 +72,6 @@ export default function UsersPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const applySearchFilter = () => {
-    if (!searchQuery.trim()) {
-      setFilteredProfiles(profiles);
-      return;
-    }
-
-    const query = searchQuery.toLowerCase();
-    const filtered = profiles.filter((profile) => {
-      const nama = profile.nama?.toLowerCase() || "";
-      return nama.includes(query);
-    });
-    setFilteredProfiles(filtered);
   };
 
   const handleYearChange = (year: string) => {
@@ -136,11 +128,11 @@ export default function UsersPage() {
         {/* Controls Container */}
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
           {/* Search Input */}
-          <div className="relative w-full md:flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+          <div className="relative w-full md:flex-1 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none z-10 transition-all " />
             <Input
               type="text"
-              placeholder="Cari berdasarkan nama"
+              placeholder="Cari berdasarkan nama atau email"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-11 h-12 rounded-lg border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-black placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black focus-visible:translate-x-[2px] focus-visible:translate-y-[2px] focus-visible:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"

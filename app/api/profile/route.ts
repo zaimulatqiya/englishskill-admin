@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get("id");
     let bulan = searchParams.get("bulan");
     const tahun = searchParams.get("tahun");
+    const search = searchParams.get("search");
 
     if (id) {
       // Fetch specific profile by ID
@@ -46,18 +47,55 @@ export async function GET(request: NextRequest) {
       let query = supabase.from("profile").select("*");
       // Apply filters if provided
       if (tahun) {
-        query = query.eq("tahun", tahun);
+        // Filter: (tahun column matches) OR (created_at is within that year)
+        const yearInt = parseInt(tahun);
+        if (!isNaN(yearInt)) {
+          const startYear = `${yearInt}-01-01T00:00:00.000Z`;
+          const endYear = `${yearInt + 1}-01-01T00:00:00.000Z`;
+
+          // Using raw PostgREST syntax for complex OR with AND
+          // syntax: or(condition1,and(condition2,condition3))
+          // IMPORTANT: with supabase-js, we need to be careful about the syntax string
+          query = query.or(`tahun.eq.${tahun},and(created_at.gte.${startYear},created_at.lt.${endYear})`);
+        } else {
+          // Fallback if tahun is not a number (though it should be for filtering)
+          query = query.eq("tahun", tahun);
+        }
       }
 
       if (bulan) {
         // Convert month name to number if it's a name
-        const monthNumber = MONTH_MAP[bulan] || bulan;
+        const monthVal = MONTH_MAP[bulan] || bulan;
+        const monthInt = parseInt(monthVal);
 
-        // Try to filter - use OR to support both formats
+        // Try to filter - use OR to support both formats + created_at if year is known
         // This will work whether database stores "1", "01", or "Januari"
-        // month must 01, 02, 03, ...
-        query = query.or(`bulan.eq.${monthNumber},bulan.eq.${monthNumber.padStart(2, "0")},bulan.eq.${bulan}`);
-        // query = query.eq("bulan", monthNumber);
+
+        let orClause = `bulan.eq.${monthVal},bulan.eq.${monthVal.padStart(2, "0")},bulan.eq.${bulan}`;
+
+        // Only add created_at filter if we have a valid year context (from tahun param)
+        // AND we have a valid month number
+        if (tahun && !isNaN(monthInt) && monthInt >= 1 && monthInt <= 12) {
+          const yearInt = parseInt(tahun);
+          if (!isNaN(yearInt)) {
+            // Calculate start and end of month
+            // Note: monthInt is 1-based (1=Jan)
+            const startMonthDate = new Date(Date.UTC(yearInt, monthInt - 1, 1));
+            // End date is start of next month
+            const endMonthDate = new Date(Date.UTC(yearInt, monthInt, 1));
+
+            const startIso = startMonthDate.toISOString();
+            const endIso = endMonthDate.toISOString();
+
+            orClause += `,and(created_at.gte.${startIso},created_at.lt.${endIso})`;
+          }
+        }
+
+        query = query.or(orClause);
+      }
+
+      if (search) {
+        query = query.or(`nama.ilike.%${search}%,email.ilike.%${search}%`);
       }
 
       // Order by created_at ascending

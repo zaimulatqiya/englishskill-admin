@@ -143,12 +143,13 @@ export async function searchProfiles(query: string): Promise<Profile[]> {
 /**
  * Filter profiles by year and month using API query params
  */
-export async function filterProfilesByDate(year?: string, month?: string): Promise<Profile[]> {
+export async function filterProfilesByDate(year?: string, month?: string, search?: string): Promise<Profile[]> {
   try {
     // Build query params
     const params = new URLSearchParams();
     if (year) params.append("tahun", year);
     if (month) params.append("bulan", month);
+    if (search) params.append("search", search);
 
     const url = params.toString() ? `${API_BASE_URL}?${params.toString()}` : API_BASE_URL;
 
