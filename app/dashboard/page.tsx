@@ -63,7 +63,7 @@ export default function DashboardPage() {
       <div className="relative z-10 w-full max-w-4xl px-6 py-10 flex flex-col items-center">
         {/* Header Text */}
         <div className="mb-12 text-center">
-          <div className="mx-auto mb-4 w-fit -rotate-2 border-2 border-black bg-primary px-4 py-1 text-white font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">SKILL EDUCATION</div>
+          <div className="mx-auto mb-4 w-fit -rotate-2 border-2 border-black bg-primary px-4 py-1 text-white font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">English Skill</div>
           <h1 className="text-4xl font-black uppercase tracking-tight text-black sm:text-6xl">Dashboard</h1>
           <p className="mt-4 font-bold text-slate-600">WELCOME BACK, ADMIN.</p>
         </div>

@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Skill Education Admin",
-  description: "Admin dashboard for Skill Education",
+  title: "English Skill Admin",
+  description: "Admin dashboard for English Skill",
 };
 
 export const viewport = {
