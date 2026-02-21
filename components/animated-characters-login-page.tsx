@@ -311,7 +311,7 @@ function AnimatedLoginPage() {
         {/* Branding Logo */}
         <div className="absolute top-6 left-6 z-20 bg-white border-2 border-black px-4 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center gap-2">
-            <img src="/assets/logo-2.png" alt="Skill Education Logo" className="h-20 w-auto object-contain" />
+            <img src="/assets/logo.png" alt="Skill Education Logo" className="h-20 w-auto object-contain" />
           </div>
         </div>
 
