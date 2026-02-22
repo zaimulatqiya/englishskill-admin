@@ -295,6 +295,7 @@ function AnimatedLoginPage() {
     if (user) {
       console.log("✅ Login successful!");
       localStorage.setItem("userRole", user.role);
+      localStorage.setItem("userEmail", user.email);
       router.push("/dashboard");
     } else {
       setError("Invalid email or password. Please try again.");
